@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="p5.js"></script>
+    <script src="p5.dom.min.js"></script>
+    <script src="p5.min.js"></script>
+    <script src="p5.play.js"></script>
+    <script src="p5.sound.min.js"></script>
+    <meta charset="UTF-8">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <title>Images App</title>
+</head>
+<body>
+    <div class="modal" id="modal-signup">
+        <form id="signup-form">
+            <div class="modal-content">
+                <h4 style="color: red;">Sign Up</h4><br>
+                <div class="input-field">
+                    <input type="email" id="signup-email" required />
+                    <label for="signup-email">Email address</label>
+                </div>
+                <div class="input-field">
+                    <input type="text" id="signup-username" required />
+                    <label for="signup-username"> Choose Username</label>
+                </div>
+                <div class="input-field">
+                    <input type="password" id="signup-password" required />
+                    <label for="signup-password">Choose Password</label>
+                </div>
+                <div class="input-field">
+                    <input type="url" id="signup-logo" required />
+                    <label for="signup-logo">Logo URL</label>
+                </div>
+                <button class="btn red" id="signup-button">Sign Up</button>
+            </div>
+        </form>
+    </div>
+    <div class="modal" id="modal-login">
+        <form id="login-form">
+            <div class="modal-content">
+                <h4 style="color: red;">Log In</h4><br>
+                <div class="input-field">
+                    <input type="email" id="login-email" required />
+                    <label for="login-email">Email address</label>
+                </div>
+                <div class="input-field">
+                    <input type="password" id="login-password" required />
+                    <label for="login-password">Password</label>
+                </div>
+            </div>
+            <button class="btn red" id="login-button">Log In</button>
+        </form>
+    </div>
+    <div class="modal" id="modal-submit-image">
+        <form id="submit-form">
+            <div class="modal-content">
+                <h4 style="color: red;">Submit Image</h4><br>
+                <div class="input-field">
+                    <input type="text" id="character-name" required/>
+                    <label for="character-name">Character Name</label>
+                </div>
+                <div class="input-field">
+                    <input type="url" id="image-url" required/>
+                    <label for="image-url">Image URL</label>
+                </div>
+            </div>
+            <button class="btn red">
+                SUBMIT IMAGE
+            </button>
+        </form>
+    </div>
+    <div class="modal" id="modal-image-options">
+            <div class="modal-content" id="image-options-content">
+                <h4 style="color: red;">Image Options</h4>
+            </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col s12">
+            <div class="input-field">
+            <input type="text" id="search_input" name="search_input" inputmode="search"/>
+            <label for="search_input">Enter Search Query</label>
+    </div></div></div>
+    &nbsp&nbsp
+    <a href="#modal-image-options" class="btn red modal-trigger">Do</a>
+    <a href="#modal-submit-image" class="btn red modal-trigger">
+        SUBMIT TO DATABASE
+    </a>
+    <button onclick="displayImages(search_input)" class="btn red">Display Images</button>
+    <a href="#modal-signup" class="btn red modal-trigger">
+        SIGN UP
+    </a>    
+    <button onclick="signUserOut()" class="btn red">Sign Out</button>
+    <a href="#modal-login" class="btn red modal-trigger">
+        LOG IN
+    </a>
+    <br>
+    <br>
+    <br> 
+        <!-- The core Firebase JS SDK is always required and must be listed first -->
+    <script src="https://www.gstatic.com/firebasejs/8.1.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.1.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.1.1/firebase-firestore.js"></script>
+    <!-- TODO: Add SDKs for Firebase products that you want to use
+        https://firebase.google.com/docs/web/setup#available-libraries -->
+    <script src="https://www.gstatic.com/firebasejs/8.1.1/firebase-analytics.js"></script>
+
+    <script>
+    // Your web app's Firebase configuration
+    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+    var firebaseConfig = {
+        apiKey: "AIzaSyD4xRXPLgPJvXCszv5E7M9ErHt7jx9vxt0",
+        authDomain: "images-7f9a6.firebaseapp.com",
+        databaseURL: "https://images-7f9a6.firebaseio.com",
+        projectId: "images-7f9a6",
+        storageBucket: "images-7f9a6.appspot.com",
+        messagingSenderId: "189833659847",
+        appId: "1:189833659847:web:93e92ab1815df1d4ce05e2",
+        measurementId: "G-YQRYKCJJXP"
+    };
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    firebase.analytics();
+    const db = firebase.firestore();
+    const auth = firebase.auth();
+    db.settings({ timestampsInSnapshots: true }); 
+        </script>
+        <script src="app.js"></script>
+        <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+        <script>
+            $(document).ready(function(){
+                $('.modal').modal();
+            })
+        </script>
+        <style>
+            .modal {
+                left: 0;
+                right: 0;
+                background-color: black;
+                border: 1px solid red;
+                border-radius: 5px;
+            }
+            input:focus {
+                border-bottom: 1px solid red !important;
+                box-shadow: 0 1px 0 0 red !important;
+            }
+            label.active {
+                color: red !important;
+            }
+            .input-field input{
+                color: red;
+                font-family: Roboto;
+            }
+            #rate_button{
+                margin-right: 15px;
+            }
+            #open_button{
+                margin-right: 15px;
+            }
+        </style>
+</body>
+</html>
